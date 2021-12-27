@@ -1,0 +1,65 @@
+{
+    "users":[
+        {
+            "id": 1,
+            "nombre": "user1",
+            "apellido": "lastname1",
+            "email": "user1@gmail.com",
+            "edad": 25,
+            "altura": 1.80,
+            "activo": true,
+            "fecha_de_creacion": "22/12/21"
+        },
+        {
+            "id": 2,
+            "nombre": "user2",
+            "apellido": "lastname2",
+            "email": "user2@gmail.com",
+            "edad": 36,
+            "altura": 1.60,
+            "activo": true,
+            "fecha_de_creacion": "22/12/21"
+        },
+        {
+            "id": 3,
+            "nombre": "user3",
+            "apellido": "last3name",
+            "email": "user3@gmail.com",
+            "edad": 25,
+            "altura": 1.80,
+            "activo": true,
+            "fecha_de_creacion": "22/12/21"
+        },
+        {
+            "id": 4,
+            "nombre": "user4",
+            "apellido": "lastname4",
+            "email": "user4@gmail.com",
+            "edad": 25,
+            "altura": 1.80,
+            "activo": true,
+            "fecha_de_creacion": "22/12/21"
+        },
+        {
+            "id": 5,
+            "nombre": "user5",
+            "apellido": "lastname5",
+            "email": "user5@gmail.com",
+            "edad": 25,
+            "altura": 1.80,
+            "activo": true,
+            "fecha_de_creacion": "22/12/21"
+        },
+        {
+            "id": 6,
+            "nombre": "user6",
+            "apellido": "lastname6",
+            "email": "user6@gmail.com",
+            "edad": 25,
+            "altura": 1.80,
+            "activo": true,
+            "fecha_de_creacion": "22/12/21"
+        }
+
+    ]
+}
