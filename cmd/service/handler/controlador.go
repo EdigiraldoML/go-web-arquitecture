@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/EdigiraldoML/go-web-arquitecture/internal/users"
+	"github.com/EdigiraldoML/go-web-arquitecture/pkg/web"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,17 +30,17 @@ func (u *User) GetAll() gin.HandlerFunc {
 
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		users, err := u.service.GetAll()
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
-		c.JSON(http.StatusOK, users)
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, users, ""))
 	}
 }
 
@@ -47,23 +48,23 @@ func (u *User) FilterByUrlParams() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		err = CheckQueryParams(c)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		filteredUsers, err := u.service.FilterByUrlParams(c)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
-		c.JSON(http.StatusOK, filteredUsers)
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, filteredUsers, ""))
 	}
 }
 
@@ -71,23 +72,23 @@ func (u *User) GetUserByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		filteredUsers, err := u.service.GetUserByID(id)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
-		c.JSON(http.StatusOK, filteredUsers)
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, filteredUsers, ""))
 	}
 }
 
@@ -95,23 +96,23 @@ func (u *User) NewUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		err = c.Bind(&users.User{})
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		newUser, err := u.service.NewUser(c)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, newUser)
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, newUser, ""))
 	}
 }
 
@@ -119,13 +120,13 @@ func (u *User) FullUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
@@ -133,27 +134,32 @@ func (u *User) FullUpdate() gin.HandlerFunc {
 
 		err = c.Bind(&user)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 		if user.Nombre == "" {
-			c.JSON(400, gin.H{"error": "el nuevo nombre del usuario es requerido"})
+			errMsg := "el nuevo nombre del usuario es requerido"
+			c.JSON(400, web.NewResponse(400, nil, errMsg))
 			return
 		}
-		if user.Apellido == "" {
-			c.JSON(400, gin.H{"error": "el nuevo apellido del usuario es requerido"})
+		if user.Apellido == "el nuevo apellido del usuario es requerido" {
+			errMsg := ""
+			c.JSON(400, web.NewResponse(400, nil, errMsg))
 			return
 		}
 		if user.Email == "" {
-			c.JSON(400, gin.H{"error": "el nuevo email del usuario es requerido"})
+			errMsg := "el nuevo email del usuario es requerido"
+			c.JSON(400, web.NewResponse(400, nil, errMsg))
 			return
 		}
 		if user.Edad == 0 {
-			c.JSON(400, gin.H{"error": "la nueva edad del usuario es requerida"})
+			errMsg := "la nueva edad del usuario es requerida"
+			c.JSON(400, web.NewResponse(400, nil, errMsg))
 			return
 		}
 		if user.Altura == 0.0 {
-			c.JSON(400, gin.H{"error": "la nueva altura del usuario es requerida"})
+			errMsg := "la nueva altura del usuario es requerida"
+			c.JSON(400, web.NewResponse(400, nil, errMsg))
 			return
 		}
 
@@ -164,11 +170,11 @@ func (u *User) FullUpdate() gin.HandlerFunc {
 				statusCode = 404
 			}
 
-			c.JSON(statusCode, gin.H{"error": err.Error()})
+			c.JSON(statusCode, web.NewResponse(statusCode, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, user)
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, ""))
 	}
 }
 
@@ -176,13 +182,13 @@ func (u *User) DeleteUserByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
@@ -193,11 +199,12 @@ func (u *User) DeleteUserByID() gin.HandlerFunc {
 				statusCode = 404
 			}
 
-			c.JSON(statusCode, gin.H{"error": err.Error()})
+			c.JSON(statusCode, web.NewResponse(statusCode, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, gin.H{"data": "el usuario fue eliminado satisfactoriamente"})
+		data := "el usuario fue eliminado satisfactoriamente"
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, data, ""))
 	}
 }
 
@@ -212,19 +219,19 @@ func (u *User) PartialUpdateToUser() gin.HandlerFunc {
 
 		err := CheckAccessToken(c)
 		if err != nil {
-			c.JSON(403, gin.H{"error": err.Error()})
+			c.JSON(403, web.NewResponse(403, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		err = c.ShouldBindJSON(&newPartialUser)
 		if err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
@@ -239,8 +246,7 @@ func (u *User) PartialUpdateToUser() gin.HandlerFunc {
 				if err.Error() == "el usuario no fue encontrado" {
 					statusCode = 404
 				}
-
-				c.JSON(statusCode, gin.H{"error": err.Error()})
+				c.JSON(statusCode, web.NewResponse(statusCode, nil, err.Error()))
 				return
 			}
 		}
@@ -253,12 +259,12 @@ func (u *User) PartialUpdateToUser() gin.HandlerFunc {
 					statusCode = 404
 				}
 
-				c.JSON(statusCode, gin.H{"error": err.Error()})
+				c.JSON(statusCode, web.NewResponse(statusCode, nil, err.Error()))
 				return
 			}
 		}
 
-		c.JSON(200, user)
+		c.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, ""))
 	}
 }
 
