@@ -164,7 +164,7 @@ func CreateSearchedUser(availableParams []string, c *gin.Context) (searchedUser 
 }
 
 func CheckAvailableParamsFromGinContext(c *gin.Context) (availableParams []string) {
-	allParams := []string{"id", "nombre", "apellido", "email", "edad", "altura", "activo", "fecha_de_creacion"}
+	allParams := []string{"id", "nombre", "apellido", "email", "edad", "altura", "fecha_de_creacion"}
 	for _, param := range allParams {
 		if c.Query(param) != "" {
 			availableParams = append(availableParams, param)
