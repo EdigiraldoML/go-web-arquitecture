@@ -55,8 +55,8 @@
       "nombre": "user6",
       "apellido": "lastname6",
       "email": "user6@gmail.com",
-      "edad": 25,
-      "altura": 1.8,
+      "edad": 15,
+      "altura": 1.6,
       "activo": true,
       "fecha_de_creacion": "22/12/21"
     },
@@ -65,8 +65,8 @@
       "nombre": "user7",
       "apellido": "lastname7",
       "email": "user7@gmail.com",
-      "edad": 25,
-      "altura": 1.8,
+      "edad": 42,
+      "altura": 1.75,
       "activo": true,
       "fecha_de_creacion": "22/12/21"
     },
@@ -85,8 +85,18 @@
       "nombre": "user9",
       "apellido": "lastname9",
       "email": "user9@gmail.com",
-      "edad": 25,
-      "altura": 1.8,
+      "edad": 36,
+      "altura": 1.65,
+      "activo": true,
+      "fecha_de_creacion": "22/12/21"
+    },
+    {
+      "id": 10,
+      "nombre": "user10",
+      "apellido": "lastname10",
+      "email": "user10@gmail.com",
+      "edad": 55,
+      "altura": 1.68,
       "activo": true,
       "fecha_de_creacion": "22/12/21"
     }
