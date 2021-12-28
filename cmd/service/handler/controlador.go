@@ -51,7 +51,11 @@ func (u *User) FilterByUrlParams() gin.HandlerFunc {
 			return
 		}
 
-		fmt.Println("Method FilterByUrlParams called.")
+		err = CheckQueryParams(c)
+		if err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
 
 		filteredUsers, err := u.service.FilterByUrlParams(c)
 		if err != nil {
@@ -92,6 +96,12 @@ func (u *User) NewUser() gin.HandlerFunc {
 		err := CheckAccessToken(c)
 		if err != nil {
 			c.JSON(403, gin.H{"error": err.Error()})
+			return
+		}
+
+		err = c.Bind(&users.User{})
+		if err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -262,4 +272,40 @@ func CheckAccessToken(c *gin.Context) (err error) {
 	}
 
 	return err
+}
+
+func CheckQueryParams(c *gin.Context) (err error) {
+	queryParams := c.Request.URL.Query()
+	for key, val := range queryParams {
+		value := val[0]
+		if value == "" { // nombre, apellido, email, fecha_de_creacion != ""
+			err = fmt.Errorf("el valor del parametro %s no puede ser nulo", key)
+			return
+		}
+
+		// "id", "nombre", "apellido", "email", "edad", "altura", "fecha_de_creacion"
+		switch key {
+		case "id":
+			id, err := strconv.ParseInt(value, 10, 64)
+			if err != nil || id <= 0 {
+				err = fmt.Errorf("id debe ser un entero mayor a cero(recibido: %s)", value)
+				return err
+			}
+		case "edad":
+			edad, err := strconv.ParseInt(value, 10, 64)
+			if err != nil || edad <= 0 {
+				err = fmt.Errorf("edad debe ser un entero mayor a cero(recibido: %s)", value)
+				return err
+			}
+		case "altura":
+			altura, err := strconv.ParseFloat(value, 64)
+			if err != nil || altura <= 0.0 {
+				err = fmt.Errorf("altura debe ser un float mayor a cero(recibido: %s)", value)
+				return err
+			}
+		}
+	}
+
+	return nil
+
 }
