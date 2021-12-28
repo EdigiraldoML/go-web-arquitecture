@@ -30,7 +30,7 @@ func (fs *FileStore) Read(data interface{}) (err error) {
 		file = []byte("[]")
 	}
 
-	err = json.Unmarshal(file, &data)
+	err = json.Unmarshal(file, data)
 
 	return err
 }

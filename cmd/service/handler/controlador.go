@@ -24,14 +24,6 @@ func CreateUser(u users.Service) *User {
 	return newUser
 }
 
-func (u *User) LoadUsersFromJSON(pathUsersJSON string) {
-	err := u.service.LoadUsersFromJSON(pathUsersJSON)
-	if err != nil {
-		errorLoadingUsers := errors.New("error while loading users from JSON: " + err.Error())
-		fmt.Println(errorLoadingUsers)
-	}
-}
-
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -58,6 +50,8 @@ func (u *User) FilterByUrlParams() gin.HandlerFunc {
 			c.JSON(403, gin.H{"error": err.Error()})
 			return
 		}
+
+		fmt.Println("Method FilterByUrlParams called.")
 
 		filteredUsers, err := u.service.FilterByUrlParams(c)
 		if err != nil {

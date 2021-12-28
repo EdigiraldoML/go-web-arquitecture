@@ -20,13 +20,13 @@ func main() {
 		fmt.Println(err)
 	}
 
-	db := store.NewStorage(store.FileType, "usuarios.json")
+	db := store.NewStorage(store.FileType, pathUsersJSON)
 
 	repository := users.CreateRepository(db)
 	service := users.CreateService(repository)
 	controller := handler.CreateUser(service)
 
-	controller.LoadUsersFromJSON(pathUsersJSON)
+	// controller.LoadUsersFromJSON(pathUsersJSON)
 
 	router := gin.Default()
 

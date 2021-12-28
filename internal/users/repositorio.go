@@ -1,15 +1,10 @@
 package users
 
 import (
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"os"
 
 	"github.com/EdigiraldoML/go-web-arquitecture/pkg/store"
 )
-
-var usersInDatabase Users
 
 type Users struct {
 	Users []User `json:"users"`
@@ -27,9 +22,8 @@ type User struct {
 }
 
 type Repository interface {
-	LoadUsersFromJSON(pathUsersJSON string) (err error)
 	GetAll() (users *Users, err error)
-	Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User)
+	Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User, err error)
 	FullUpdate(id int64, nombre string, apellido string, email string, edad int64, altura float64) (user User, err error)
 	DeleteUserByID(id int64) (err error)
 	UpdateUserLastName(id int64, apellido string) (user User, err error)
@@ -48,47 +42,30 @@ func CreateRepository(db store.Store) Repository {
 	return newRepository
 }
 
-func (r *repository) LoadUsersFromJSON(pathUsersJSON string) (err error) {
-	jsonFile, err := os.Open(pathUsersJSON)
-	if err != nil {
-		return err
-	}
-	defer jsonFile.Close()
-
-	byteValue, err := ioutil.ReadAll(jsonFile)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(byteValue, &usersInDatabase)
-
-	return err
-}
-
 func (r *repository) GetAll() (users *Users, err error) {
 
-	users = &usersInDatabase
-	if len(usersInDatabase.Users) == 0 {
-		err = errors.New("los usuarios no han sido cargados o aún no hay usuarios")
-	}
+	users = &Users{}
+
+	err = r.db.Read(users)
 
 	return users, err
 }
 
-func (r *repository) Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User) {
+func (r *repository) Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User, err error) {
 
 	var usuarios Users
-	r.db.Read(&usuarios)
+	err = r.db.Read(&usuarios)
+	if err != nil {
+		return user, err
+	}
 
-	usuario := User{id, nombre, apellido, email, edad, altura, activo, fecha_de_creacion}
+	user = User{id, nombre, apellido, email, edad, altura, activo, fecha_de_creacion}
 
-	usuarios.Users = append(usuarios.Users, usuario)
+	usuarios.Users = append(usuarios.Users, user)
 
-	// if err := r.db.Write(usuarios); err != nil {
-	// 	return user
-	// }
-	// lastID = usuario.Id
-	return usuario
+	err = r.db.Write(&usuarios)
+
+	return user, err
 }
 
 func (r *repository) FullUpdate(id int64, nombre string, apellido string, email string, edad int64, altura float64) (user User, err error) {
@@ -110,6 +87,8 @@ func (r *repository) FullUpdate(id int64, nombre string, apellido string, email 
 
 	user = *userToUpdate
 
+	err = r.db.Write(&users)
+
 	return user, err
 }
 
@@ -124,10 +103,10 @@ func (r *repository) DeleteUserByID(id int64) (err error) {
 		return err
 	}
 
-	ptrUsersInDatabase := &usersInDatabase
+	users.Users[userIndexToDelete].Activo = false
+	users.Users = append(users.Users[:userIndexToDelete], users.Users[userIndexToDelete+1:]...)
 
-	ptrUsersInDatabase.Users[userIndexToDelete].Activo = false
-	ptrUsersInDatabase.Users = append(ptrUsersInDatabase.Users[:userIndexToDelete], ptrUsersInDatabase.Users[userIndexToDelete+1:]...)
+	err = r.db.Write(&users)
 
 	return err
 }
@@ -146,6 +125,8 @@ func (r *repository) UpdateUserLastName(id int64, apellido string) (user User, e
 	ptrUser.Apellido = apellido
 	user = *ptrUser
 
+	err = r.db.Write(&users)
+
 	return user, err
 }
 
@@ -162,6 +143,8 @@ func (r *repository) UpdateUserAge(id int64, edad int64) (user User, err error) 
 
 	ptrUser.Edad = edad
 	user = *ptrUser
+
+	err = r.db.Write(&users)
 
 	return user, err
 }

@@ -8,9 +8,8 @@ import (
 )
 
 type Service interface {
-	LoadUsersFromJSON(pathUsersJSON string) (err error)
 	GetAll() (users *Users, err error)
-	Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User)
+	Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User, err error)
 	FilterByUrlParams(c *gin.Context) (filteredUsers Users, err error)
 	GetUserByID(id int64) (user User, err error)
 	NewUser(c *gin.Context) (user User, err error)
@@ -32,16 +31,14 @@ func CreateService(r Repository) Service {
 	return newService
 }
 
-func (s *service) LoadUsersFromJSON(pathUsersJSON string) (err error) {
-	return s.repository.LoadUsersFromJSON(pathUsersJSON)
-}
-
 func (s *service) GetAll() (users *Users, err error) {
 	return s.repository.GetAll()
 }
 
-func (s *service) Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User) {
-	return s.repository.Store(id, nombre, apellido, email, edad, altura, activo, fecha_de_creacion)
+func (s *service) Store(id int64, nombre string, apellido string, email string, edad int64, altura float64, activo bool, fecha_de_creacion string) (user User, err error) {
+	user, err = s.repository.Store(id, nombre, apellido, email, edad, altura, activo, fecha_de_creacion)
+
+	return user, err
 }
 
 func (s *service) FilterByUrlParams(c *gin.Context) (filteredUsers Users, err error) {
@@ -84,6 +81,9 @@ func (s *service) NewUser(c *gin.Context) (user User, err error) {
 	}
 
 	usersInDatabase, err := s.repository.GetAll()
+	if err != nil {
+		return user, err
+	}
 
 	lastRegisteredUserindex := len(usersInDatabase.Users) - 1
 	lastRegisteredUser := usersInDatabase.Users[lastRegisteredUserindex]
@@ -91,7 +91,7 @@ func (s *service) NewUser(c *gin.Context) (user User, err error) {
 	// Assign a new id
 	user.Id = lastRegisteredUser.Id + 1
 
-	user = s.repository.Store(user.Id, user.Nombre, user.Apellido, user.Email, user.Edad, user.Altura, user.Activo, user.FechaDeCreacion)
+	user, err = s.repository.Store(user.Id, user.Nombre, user.Apellido, user.Email, user.Edad, user.Altura, user.Activo, user.FechaDeCreacion)
 
 	return user, err
 }
