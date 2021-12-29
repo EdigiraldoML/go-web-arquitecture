@@ -11,6 +11,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// @title MeLi Bootcamp API
+// @version 1.0
+// @description API built to manage users.
+// @termsOfService https://developers.mercadolibre.com.co/es_ar/terminos-y-condiciones
+
+// @contact.name API Support
+// @contact.url https://developers.mercadolibre.com.ar/support
+
+// @license.name Apache 2.0
+// @license.url https://www.apache.org/licenses/LICENSE-2.0
 func main() {
 
 	pathUsersJSON := "users.json"
@@ -25,8 +35,6 @@ func main() {
 	repository := users.CreateRepository(db)
 	service := users.CreateService(repository)
 	controller := handler.CreateUser(service)
-
-	// controller.LoadUsersFromJSON(pathUsersJSON)
 
 	router := gin.Default()
 
