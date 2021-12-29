@@ -90,6 +90,8 @@ func (s *service) NewUser(c *gin.Context) (user User, err error) {
 
 	// Assign a new id
 	user.Id = lastRegisteredUser.Id + 1
+	// User active
+	user.Activo = true
 
 	user, err = s.repository.Store(user.Id, user.Nombre, user.Apellido, user.Email, user.Edad, user.Altura, user.Activo, user.FechaDeCreacion)
 
