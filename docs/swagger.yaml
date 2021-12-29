@@ -1,0 +1,373 @@
+definitions:
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: API built to manage users.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  termsOfService: https://developers.mercadolibre.com.co/es_ar/terminos-y-condiciones
+  title: MeLi Bootcamp API
+  version: "1.0"
+paths:
+  /users/:
+    get:
+      consumes:
+      - application/json
+      description: List users satisfying received url params
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user id
+        in: query
+        name: id
+        type: integer
+      - description: user name
+        in: query
+        name: nombre
+        type: string
+      - description: user last name
+        in: query
+        name: apellido
+        type: string
+      - description: user email
+        in: query
+        name: email
+        type: string
+      - description: user age
+        in: query
+        name: edad
+        type: integer
+      - description: user height
+        in: query
+        name: altura
+        type: number
+      - description: user sign up date
+        in: query
+        name: fecha_de_creacion
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List users based on received url params
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user given params in body
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user id, ignored param.
+        in: body
+        name: id
+        required: true
+        schema:
+          type: integer
+      - description: user name
+        in: body
+        name: nombre
+        required: true
+        schema:
+          type: string
+      - description: user last name
+        in: body
+        name: apellido
+        required: true
+        schema:
+          type: string
+      - description: user email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: user edad
+        in: body
+        name: edad
+        required: true
+        schema:
+          type: integer
+      - description: user height
+        in: body
+        name: altura
+        required: true
+        schema:
+          type: number
+      - description: ignored, always true
+        in: body
+        name: activo
+        required: true
+        schema:
+          type: boolean
+      - description: user sign up date, use todays date. 'dd/mm/yyyy'
+        in: body
+        name: fecha_de_creacion
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Creates a new user
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing user given the id as an url param
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete an existing user
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: List user given the id as a param in url
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List user given the id
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Partial update to an existing user with body params
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user last name
+        in: body
+        name: apellido
+        schema:
+          type: string
+      - description: user edad
+        in: body
+        name: edad
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Partial update to an existing user
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Full update to an existing user with body params
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user id, ignored param.
+        in: body
+        name: id
+        required: true
+        schema:
+          type: integer
+      - description: user name
+        in: body
+        name: nombre
+        required: true
+        schema:
+          type: string
+      - description: user last name
+        in: body
+        name: apellido
+        required: true
+        schema:
+          type: string
+      - description: user email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: user edad
+        in: body
+        name: edad
+        required: true
+        schema:
+          type: integer
+      - description: user height
+        in: body
+        name: altura
+        required: true
+        schema:
+          type: number
+      - description: ignored, always true
+        in: body
+        name: activo
+        required: true
+        schema:
+          type: boolean
+      - description: user sign up date, use todays date. 'dd/mm/yyyy'
+        in: body
+        name: fecha_de_creacion
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Full update to an existing user
+      tags:
+      - Users
+  /users/GetAll:
+    get:
+      consumes:
+      - application/json
+      description: List all users that are recorder in database
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List all users in database
+      tags:
+      - Users
+swagger: "2.0"

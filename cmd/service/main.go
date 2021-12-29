@@ -2,13 +2,18 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/EdigiraldoML/go-web-arquitecture/cmd/service/handler"
+	"github.com/EdigiraldoML/go-web-arquitecture/docs"
 	"github.com/EdigiraldoML/go-web-arquitecture/internal/users"
 	"github.com/EdigiraldoML/go-web-arquitecture/pkg/store"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 // @title MeLi Bootcamp API
@@ -31,12 +36,14 @@ func main() {
 	}
 
 	db := store.NewStorage(store.FileType, pathUsersJSON)
-
 	repository := users.CreateRepository(db)
 	service := users.CreateService(repository)
 	controller := handler.CreateUser(service)
 
 	router := gin.Default()
+
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	usrs := router.Group("/users")
 	usrs.GET("/", controller.FilterByUrlParams())
