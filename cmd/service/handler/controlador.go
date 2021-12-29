@@ -25,6 +25,17 @@ func CreateUser(u users.Service) *User {
 	return newUser
 }
 
+// GetUser godoc
+// @Summary List all users in database
+// @Tags Users
+// @Description List all users that are recorder in database
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Router /users/GetAll [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -44,6 +55,24 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
+// FilterByUrlParams godoc
+// @Summary List users based on received url params
+// @Tags Users
+// @Description List users satisfying received url params
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id query int false "user id"
+// @Param nombre query string false "user name"
+// @Param apellido query string false "user last name"
+// @Param email query string false "user email"
+// @Param edad query int false "user age"
+// @Param altura query number false "user height"
+// @Param fecha_de_creacion query string false "user sign up date"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Router /users/ [get]
 func (u *User) FilterByUrlParams() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
@@ -68,6 +97,18 @@ func (u *User) FilterByUrlParams() gin.HandlerFunc {
 	}
 }
 
+// GetUserByID godoc
+// @Summary List user given the id
+// @Tags Users
+// @Description List user given the id as a param in url
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "user id"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Router /users/{id} [get]
 func (u *User) GetUserByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
@@ -92,6 +133,25 @@ func (u *User) GetUserByID() gin.HandlerFunc {
 	}
 }
 
+// NewUser godoc
+// @Summary Creates a new user
+// @Tags Users
+// @Description Creates a new user given params in body
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id body int true "user id, ignored param."
+// @Param nombre body string true "user name"
+// @Param apellido body string true "user last name"
+// @Param email body string true "user email"
+// @Param edad body int true "user edad"
+// @Param altura body number true "user height"
+// @Param activo body bool true "ignored, always true"
+// @Param fecha_de_creacion body string true "user sign up date, use todays date. 'dd/mm/yyyy'"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Router /users/ [post]
 func (u *User) NewUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
@@ -116,6 +176,25 @@ func (u *User) NewUser() gin.HandlerFunc {
 	}
 }
 
+// FullUpdate godoc
+// @Summary Full update to an existing user
+// @Tags Users
+// @Description Full update to an existing user with body params
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id body int true "user id, ignored param."
+// @Param nombre body string true "user name"
+// @Param apellido body string true "user last name"
+// @Param email body string true "user email"
+// @Param edad body int true "user edad"
+// @Param altura body number true "user height"
+// @Param activo body bool true "ignored, always true"
+// @Param fecha_de_creacion body string true "user sign up date, use todays date. 'dd/mm/yyyy'"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Router /users/{id} [put]
 func (u *User) FullUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
@@ -178,6 +257,19 @@ func (u *User) FullUpdate() gin.HandlerFunc {
 	}
 }
 
+// DeleteUserByID godoc
+// @Summary Delete an existing user
+// @Tags Users
+// @Description Delete an existing user given the id as an url param
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "user id"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users/{id} [delete]
 func (u *User) DeleteUserByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := CheckAccessToken(c)
@@ -208,6 +300,20 @@ func (u *User) DeleteUserByID() gin.HandlerFunc {
 	}
 }
 
+// PartialUpdateToUser godoc
+// @Summary Partial update to an existing user
+// @Tags Users
+// @Description Partial update to an existing user with body params
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param apellido body string false "user last name"
+// @Param edad body int false "user edad"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 403 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users/{id} [patch]
 func (u *User) PartialUpdateToUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		type partialUser struct {
