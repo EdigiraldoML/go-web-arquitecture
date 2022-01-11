@@ -87,7 +87,7 @@ func (r *repository) FullUpdate(id int64, nombre string, apellido string, email 
 
 	user = *userToUpdate
 
-	err = r.db.Write(&users)
+	err = r.db.Write(users)
 
 	return user, err
 }
@@ -106,7 +106,7 @@ func (r *repository) DeleteUserByID(id int64) (err error) {
 	users.Users[userIndexToDelete].Activo = false
 	users.Users = append(users.Users[:userIndexToDelete], users.Users[userIndexToDelete+1:]...)
 
-	err = r.db.Write(&users)
+	err = r.db.Write(users)
 
 	return err
 }
@@ -125,7 +125,7 @@ func (r *repository) UpdateUserLastName(id int64, apellido string) (user User, e
 	ptrUser.Apellido = apellido
 	user = *ptrUser
 
-	err = r.db.Write(&users)
+	err = r.db.Write(users)
 
 	return user, err
 }
@@ -144,7 +144,7 @@ func (r *repository) UpdateUserAge(id int64, edad int64) (user User, err error) 
 	ptrUser.Edad = edad
 	user = *ptrUser
 
-	err = r.db.Write(&users)
+	err = r.db.Write(users)
 
 	return user, err
 }
