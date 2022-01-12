@@ -54,5 +54,8 @@ func main() {
 	usrs.DELETE("/:id", controller.DeleteUserByID())
 	usrs.PATCH("/:id", controller.PartialUpdateToUser())
 
-	router.Run()
+	err = router.Run()
+	if err != nil {
+		fmt.Println(err)
+	}
 }
